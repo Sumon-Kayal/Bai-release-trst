@@ -1,0 +1,12 @@
+{
+  "name": "bundle-apks-installer",
+  "version": "4.6.0",
+  "description": "Bundle APKs Installer (BAI) Companion Web Service",
+  "private": true,
+  "main": "server.js",
+  "scripts": {
+    "dev": "node server.js",
+    "start": "node server.js",
+    "build": "./gradlew assembleDebug"
+  }
+}

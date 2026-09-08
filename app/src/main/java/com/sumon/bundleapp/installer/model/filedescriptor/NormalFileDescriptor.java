@@ -1,0 +1,31 @@
+package com.sumon.bundleapp.installer.model.filedescriptor;
+
+import com.sumon.bundleapp.installer.utils.IOUtils;
+
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.InputStream;
+
+public class NormalFileDescriptor implements FileDescriptor {
+
+    private final File mFile;
+
+    public NormalFileDescriptor(File file) {
+        mFile = file;
+    }
+
+    @Override
+    public String name() {
+        return mFile.getName();
+    }
+
+    @Override
+    public long length() {
+        return mFile.length();
+    }
+
+    @Override
+    public InputStream open() throws Exception {
+        return IOUtils.buffer(new FileInputStream(mFile));
+    }
+}

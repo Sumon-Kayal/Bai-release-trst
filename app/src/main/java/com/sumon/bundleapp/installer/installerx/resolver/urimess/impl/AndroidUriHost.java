@@ -1,0 +1,111 @@
+package com.sumon.bundleapp.installer.installerx.resolver.urimess.impl;
+
+import android.content.Context;
+import android.net.Uri;
+import android.os.ParcelFileDescriptor;
+
+import androidx.documentfile.provider.DocumentFile;
+
+import com.sumon.bundleapp.installer.R;
+import com.sumon.bundleapp.installer.installerx.resolver.urimess.UriHost;
+import com.sumon.bundleapp.installer.utils.IOUtils;
+import com.sumon.bundleapp.installer.utils.Logs;
+import com.sumon.bundleapp.installer.utils.Utils;
+import com.sumon.bundleapp.installer.utils.saf.SafUtils;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Objects;
+
+public class AndroidUriHost implements UriHost {
+    private static final long MAX_FILE_LENGTH_FOR_COPY = 1024 * 1024 * 100;
+
+    private final Context mContext;
+
+    public AndroidUriHost(Context context) {
+        mContext = context;
+    }
+
+    @Override
+    public String getFileNameFromUri(Uri uri) {
+        return SafUtils.getFileNameFromContentUri(mContext, uri);
+    }
+
+    @Override
+    public long getFileSizeFromUri(Uri uri) {
+        DocumentFile documentFile = SafUtils.docFileFromSingleUriOrFileUri(mContext, uri);
+
+        if (documentFile != null)
+            return documentFile.length();
+        else
+            return -1;
+    }
+
+    @Override
+    public UriAsFile openUriAsFile(Uri uri) throws Exception {
+        try {
+            return new ProcSelfFdUriAsFile(uri);
+        } catch (Exception e) {
+            Logs.logException(new IOException("Failed to access file descriptor"));
+            return new CopyFileUriAsFile(uri);
+        }
+    }
+
+    @Override
+    public InputStream openUriInputStream(Uri uri) throws Exception {
+        return IOUtils.buffer(mContext.getContentResolver().openInputStream(uri));
+    }
+
+    private class ProcSelfFdUriAsFile implements UriAsFile {
+
+        private final ParcelFileDescriptor mFd;
+
+        private ProcSelfFdUriAsFile(Uri uri) throws Exception {
+            mFd = mContext.getContentResolver().openFileDescriptor(uri, "r");
+            if (!file().canRead())
+                throw new IOException("Failed to read file descriptor");
+        }
+
+        @Override
+        public File file() {
+            return SafUtils.parcelFdToFile(mFd);
+        }
+
+        @Override
+        public void close() throws Exception {
+            if (mFd != null)
+                mFd.close();
+        }
+    }
+
+    private class CopyFileUriAsFile implements UriAsFile {
+
+        private final File mTempFile;
+
+        private CopyFileUriAsFile(Uri uri) throws Exception {
+            if (SafUtils.getFileLengthFromContentUri(mContext, uri) > AndroidUriHost.MAX_FILE_LENGTH_FOR_COPY) {
+                throw new IOException(mContext.getString(R.string.installerx_android_uri_host_file_too_big));
+            }
+
+            mTempFile = Utils.createTempFileInCache(mContext, "AndroidUriHost.CopyFileUriAsFile", "tmp");
+            try (InputStream in = Objects.requireNonNull(mContext.getContentResolver().openInputStream(uri));
+                 OutputStream out = IOUtils.buffer(new FileOutputStream(mTempFile))) {
+                IOUtils.copyStream(in, out);
+            }
+        }
+
+        @Override
+        public File file() {
+            return mTempFile;
+        }
+
+        @Override
+        public void close() {
+            //noinspection ResultOfMethodCallIgnored
+            mTempFile.delete();
+        }
+    }
+}

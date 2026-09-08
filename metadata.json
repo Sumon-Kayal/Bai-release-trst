@@ -1,0 +1,6 @@
+{
+  "name": "Bundle APKs Installer",
+  "description": "Install and back up split APKs and Android App Bundles with rootless, root/shell, or Shizuku support",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

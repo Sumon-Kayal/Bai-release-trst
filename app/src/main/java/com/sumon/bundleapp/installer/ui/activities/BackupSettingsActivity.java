@@ -1,0 +1,45 @@
+package com.sumon.bundleapp.installer.ui.activities;
+
+import android.os.Bundle;
+
+import androidx.fragment.app.Fragment;
+
+import com.sumon.bundleapp.installer.R;
+import com.sumon.bundleapp.installer.backup2.BackupStorageProvider;
+import com.sumon.bundleapp.installer.backup2.impl.DefaultBackupManager;
+import com.sumon.bundleapp.installer.utils.InsetsUtils;
+
+public class BackupSettingsActivity extends ThemedActivity {
+
+    private static final String FRAGMENT_TAG = "whatever";
+
+    Fragment mCurrentFragment;
+
+    @Override
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_backup_settings);
+
+        InsetsUtils.applySystemBarInsetsAsPadding(findViewById(android.R.id.content));
+
+        mCurrentFragment = getSupportFragmentManager().findFragmentByTag(FRAGMENT_TAG);
+
+        BackupStorageProvider storageProvider = DefaultBackupManager.getInstance(this).getDefaultBackupStorageProvider();
+
+        //TODO probably cache current fragment type to avoid creating a new fragment on activity recreation
+        storageProvider.getIsSetupLiveData().observe(this, isSetup -> {
+            if (mCurrentFragment != null) {
+                getSupportFragmentManager().beginTransaction()
+                        .remove(mCurrentFragment)
+                        .commitNow();
+
+                mCurrentFragment = null;
+            }
+
+            mCurrentFragment = isSetup ? storageProvider.createSettingsFragment() : storageProvider.createSetupFragment();
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container_backup_settings, mCurrentFragment, FRAGMENT_TAG)
+                    .commitNow();
+        });
+    }
+}

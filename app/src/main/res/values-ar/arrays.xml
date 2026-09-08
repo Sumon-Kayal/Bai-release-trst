@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="file_picker_sort_variants">
+        <item>"حسب الإسم (أبجدي)\""</item>
+        <item>"حسب الإسم (عكس الترتيب الأبجدي)"</item>
+        <item>"أخر تعديل أولا"</item>
+        <item>"أقدم تعديل أولا"</item>
+        <item>"أصغر حجم ملف أولاً"</item>
+        <item>"أكبر حجم ملف أولاً"</item>
+    </string-array>
+    <string-array name="installers">
+        <item>"بدون روت (يوصى به)"</item>
+        <item>"روت (يتطلب روت)"</item>
+        <item>"[Shizuku](يتطلب تطبيق [Shizuku] 3.x)"</item>
+    </string-array>
+    <string-array name="size_units">
+        <item>بت</item>
+        <item>كيلوبايت</item>
+        <item>ميجابايت</item>
+        <item>جيجابايت</item>
+        <item>تيرابايت</item>
+        <item>بيتابايت</item>
+    </string-array>
+    <string-array name="backup_file_name_formats">
+        <item>الإسم_الحزمة_الإصدار.apks</item>
+        <item>الإسم. apks</item>
+        <item>الإسم_الإصدار.apks</item>
+    </string-array>
+    <string-array name="install_locations">
+        <item>دع النظام يقرر</item>
+        <item>التخزين الداخلي فقط</item>
+        <item>يفضل التخزين الخارجي (قد يظل النظام يقرر إستخدام التخزين الداخلي)</item>
+    </string-array>
+    <string-array name="name_format_parts">
+        <item>الاسم</item>
+        <item>الإصدار</item>
+        <item>رمز الإصدار</item>
+        <item>الحزمة</item>
+        <item>الطابع الزمني</item>
+    </string-array>
+    <string-array name="backup_dir_selection_methods">
+        <item>Internal file picker</item>
+        <item>System file picker</item>
+    </string-array>
+
+    <string-array name="app_language_names">
+        <item>System default</item>
+        <item>English</item>
+        <item>العربية</item>
+        <item>Azərbaycan dili</item>
+        <item>Български</item>
+        <item>Deutsch</item>
+        <item>Ελληνικά</item>
+        <item>Español</item>
+        <item>Français</item>
+        <item>Italiano</item>
+        <item>日本語</item>
+        <item>한국어</item>
+        <item>Polski</item>
+        <item>Português (Brasil)</item>
+        <item>Русский</item>
+        <item>Svenska</item>
+        <item>Türkçe</item>
+        <item>Українська</item>
+        <item>Tiếng Việt</item>
+        <item>简体中文</item>
+        <item>繁體中文</item>
+    </string-array>
+    <string-array name="backup_file_name_formats_values" translatable="false">
+        <item>NAME_PACKAGE_VERSION</item>
+        <item>NAME</item>
+        <item>NAME_VERSION</item>
+    </string-array>
+    <string-array name="install_locations_values" translatable="false">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+    </string-array>
+
+</resources>
